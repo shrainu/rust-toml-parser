@@ -1,0 +1,5 @@
+[test]
+value = 12
+string = "this is a string."
+boolean = false
+array = [1, 2, 3]
