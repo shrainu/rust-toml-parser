@@ -2,9 +2,9 @@
 
 Simple TOML parser written in Rust.
 
-> Version 0.05
+> Version 0.06
 
 ## Changelog
 
-- Better types
-- New type syntax
+- New C API
+- C type-checking is mandatory now

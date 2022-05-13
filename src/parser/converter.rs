@@ -77,7 +77,8 @@ fn convert_ast_array_to_string(array: &Vec<AST>, typecheck: bool) -> String {
         if real_t != current_type.as_str() {
             panic!(
                 "[ERROR] Wrong type for array element, expected `{}` found `{}`.",
-                current_type[0..current_type.len() -1].to_string(), t
+                current_type[0..current_type.len() - 1].to_string(),
+                t
             );
         }
     };
@@ -181,9 +182,7 @@ pub fn convert_ast_to_string(compound: &AST, typecheck: bool) -> TOMLStringMap {
                             str += "'";
                             str
                         }
-                        AST::ASTArray(v) => {
-                            convert_ast_array_to_string(v, typecheck)
-                        }
+                        AST::ASTArray(v) => convert_ast_array_to_string(v, typecheck),
                         _ => {
                             panic!(
                                 "[ERROR] Unknown type for variable value, type was `{:?}`.",
