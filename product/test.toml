@@ -1,5 +1,11 @@
+[parser-config]
+type-checking = true
+
 [test]
 value = 12
 string = "this is a string."
 boolean = false
-array = [1, 2, 3]
+array = [
+    1, 2, 3
+]
+test = true

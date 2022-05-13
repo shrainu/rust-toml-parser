@@ -3,22 +3,20 @@ use crate::parser::token::{Token, TokenType};
 
 use std::fs;
 
-
 pub struct Lexer {
     current: char,
     ptr: usize,
     content: Vec<u8>,
-    pub tokens: Vec<Token>
+    pub tokens: Vec<Token>,
 }
 
 impl Lexer {
-
     pub fn new(filepath: &str) -> Self {
-         let mut lexer = Lexer {
+        let mut lexer = Lexer {
             current: '\0',
             ptr: 0,
             content: fs::read(filepath).expect("[ERROR] Failed to read file."),
-            tokens: vec![]
+            tokens: vec![],
         };
 
         lexer.current = lexer.content[0] as char;
@@ -27,11 +25,11 @@ impl Lexer {
     }
 
     fn advance(&mut self) {
-        if self.ptr == self.content.len() - 1 {
-            self.current = '\0';
-        } else {
+        if self.ptr < self.content.len() - 1 {
             self.ptr += 1;
             self.current = char::from(self.content[self.ptr]);
+        } else {
+            self.current = '\0'
         }
     }
 
@@ -40,15 +38,12 @@ impl Lexer {
     }
 
     fn skip_whitespace(&mut self) {
-        while (self.current == ' ' || self.current == '\t' || self.current == '\n') &&
-            self.ptr != self.content.len() {
-
+        while (self.current == ' ' || self.current == '\t') && self.ptr != self.content.len() {
             self.advance();
         }
     }
 
     fn get_string(&mut self) -> Token {
-
         self.advance();
 
         let mut string: String = String::new();
@@ -66,9 +61,9 @@ impl Lexer {
     fn get_id(&mut self) -> Token {
         let mut string: String = String::new();
 
-        while (self.current != ' ' && self.current != '\t' && self.current != '\n')
-            && self.ptr != self.content.len() {
-
+        while (self.current != ' ' && self.current != '\t' && self.current != '\0')
+            && self.ptr < self.content.len()
+        {
             if Token::is_single_token(self.current) {
                 return Token::new(TokenType::TokenID, string.as_str());
             }
@@ -81,7 +76,6 @@ impl Lexer {
     }
 
     pub fn get_next_token(&mut self) -> Option<Token> {
-
         // Collect tokens
         loop {
             // Advance
@@ -107,20 +101,24 @@ impl Lexer {
                 '=' => {
                     self.advance();
                     return Some(Token::new(TokenType::TokenEqual, "="));
-                },
+                }
                 '[' => {
                     self.advance();
                     return Some(Token::new(TokenType::TokenLBracket, "["));
-                },
+                }
                 ']' => {
                     self.advance();
                     return Some(Token::new(TokenType::TokenRBracket, "]"));
-                },
+                }
                 ',' => {
                     self.advance();
                     return Some(Token::new(TokenType::TokenComma, ","));
                 }
-                _ => { }
+                '\n' => {
+                    self.advance();
+                    return Some(Token::new(TokenType::TokenNewLine, "\n"));
+                }
+                _ => {}
             };
         }
 

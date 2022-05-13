@@ -2,8 +2,8 @@
 
 Simple TOML parser written in Rust.
 
-> Version 0.02
+> Version 0.03
 
 ## Changelog
 
-- Lexer and token collection
+- Parsing complete
