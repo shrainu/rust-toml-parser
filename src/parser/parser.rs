@@ -1,7 +1,6 @@
 use crate::parser::ast::AST;
 use crate::parser::lexer::Lexer;
-use crate::parser::token::TokenType;
-use crate::Token;
+use crate::parser::token::{Token, TokenType};
 
 pub struct Parser {
     lexer: Lexer,
@@ -235,6 +234,18 @@ impl Parser {
                 }
                 TokenType::TokenNewLine => {
                     self.consume(TokenType::TokenNewLine);
+                }
+                TokenType::TokenLBracket => {
+                    if !expected_value {
+                        panic!(
+                            "[ERROR] Unexpected token {:?}, with value '{}'.",
+                            token.token_type, token.value
+                        );
+                    }
+
+                    array.push(self.parse_array());
+
+                    expected_value = false;
                 }
                 _ => {
                     panic!(

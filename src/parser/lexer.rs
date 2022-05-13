@@ -92,7 +92,7 @@ impl Lexer {
             }
 
             // Collect id
-            if self.current.is_alphanumeric() {
+            if self.current.is_alphanumeric() || self.current == '-' || self.current == '+' {
                 return Some(self.get_id());
             }
 

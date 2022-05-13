@@ -2,8 +2,8 @@
 
 Simple TOML parser written in Rust.
 
-> Version 0.03
+> Version 0.04
 
 ## Changelog
 
-- Parsing complete
+- C API

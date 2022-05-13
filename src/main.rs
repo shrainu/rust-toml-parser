@@ -1,6 +1,7 @@
 extern crate core;
 
 use crate::parser::ast::AST;
+use crate::parser::converter::convert_ast_to_string;
 use crate::parser::parser::Parser;
 use crate::parser::token::Token;
 
@@ -35,9 +36,25 @@ fn main() {
 
     let ast: AST = pars.parse();
 
-    if let AST::ASTCompound(vec) = ast {
+    if let AST::ASTCompound(vec) = &ast {
         for a in vec {
             println!("AST: {:?}", a);
         }
+    }
+
+    println!();
+
+    let map = convert_ast_to_string(&ast, false);
+
+    for (name, tag) in map.tags.iter() {
+        println!("[{}]", name.to_uppercase());
+        for (k, v) in tag.values.iter() {
+            if v.contains(';') {
+                println!("{{ K: {}, V: [{}] }}", k, v);
+            } else {
+                println!("{{ K: {}, V: {} }}", k, v);
+            }
+        }
+        println!();
     }
 }
