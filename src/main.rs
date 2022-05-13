@@ -44,7 +44,7 @@ fn main() {
 
     println!();
 
-    let map = convert_ast_to_string(&ast, false);
+    let map = convert_ast_to_string(&ast, true);
 
     for (name, tag) in map.tags.iter() {
         println!("[{}]", name.to_uppercase());

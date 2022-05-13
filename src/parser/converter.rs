@@ -65,7 +65,7 @@ fn convert_ast_array_to_string(array: &Vec<AST>, typecheck: bool) -> String {
             return;
         }
 
-        let real_t: String = t.to_owned() + "-";
+        let real_t: String = t.to_owned() + "#";
 
         if first {
             first = false;
@@ -77,7 +77,7 @@ fn convert_ast_array_to_string(array: &Vec<AST>, typecheck: bool) -> String {
         if real_t != current_type.as_str() {
             panic!(
                 "[ERROR] Wrong type for array element, expected `{}` found `{}`.",
-                current_type, t
+                current_type[0..current_type.len() -1].to_string(), t
             );
         }
     };
@@ -86,19 +86,19 @@ fn convert_ast_array_to_string(array: &Vec<AST>, typecheck: bool) -> String {
     for ast in array.iter() {
         match ast {
             AST::ASTBool(v) => {
-                check_type(&mut string, "bool");
+                check_type(&mut string, "array_bool");
 
                 string += ";";
                 string += v.to_string().as_str();
             }
             AST::ASTInt(v) => {
-                check_type(&mut string, "int");
+                check_type(&mut string, "array_int");
 
                 string += ";";
                 string += v.to_string().as_str();
             }
             AST::ASTString(v) => {
-                check_type(&mut string, "string");
+                check_type(&mut string, "array_string");
 
                 string += ";";
                 string += "'";
@@ -109,7 +109,7 @@ fn convert_ast_array_to_string(array: &Vec<AST>, typecheck: bool) -> String {
                 let arr_string = convert_ast_array_to_string(vec, typecheck);
 
                 if typecheck {
-                    let pos = arr_string.find('-');
+                    let pos = arr_string.find('#');
                     if let Some(n) = pos {
                         let mut t: String = String::from("array_");
                         t += &arr_string[0..n];
@@ -144,15 +144,46 @@ pub fn convert_ast_to_string(compound: &AST, typecheck: bool) -> TOMLStringMap {
                 }
                 AST::ASTVariableDefinition(n, v) => {
                     let val: String = match v.as_ref() {
-                        AST::ASTBool(v) => v.to_string(),
-                        AST::ASTInt(v) => v.to_string(),
+                        AST::ASTBool(v) => {
+                            let mut str: String;
+
+                            if typecheck {
+                                str = String::from("bool#");
+                            } else {
+                                str = String::new();
+                            }
+
+                            str += v.to_string().as_str();
+                            str
+                        }
+                        AST::ASTInt(v) => {
+                            let mut str: String;
+
+                            if typecheck {
+                                str = String::from("int#");
+                            } else {
+                                str = String::new();
+                            }
+
+                            str += v.to_string().as_str();
+                            str
+                        }
                         AST::ASTString(v) => {
-                            let mut str: String = String::from("'");
+                            let mut str: String;
+
+                            if typecheck {
+                                str = String::from("string#'");
+                            } else {
+                                str = String::from("'");
+                            }
+
                             str += v.as_str();
                             str += "'";
                             str
                         }
-                        AST::ASTArray(v) => convert_ast_array_to_string(v, typecheck),
+                        AST::ASTArray(v) => {
+                            convert_ast_array_to_string(v, typecheck)
+                        }
                         _ => {
                             panic!(
                                 "[ERROR] Unknown type for variable value, type was `{:?}`.",
