@@ -2,7 +2,6 @@ use crate::parser::ast::AST;
 use std::any::Any;
 
 use std::collections::HashMap;
-//use std::ffi::CStr;
 
 pub struct TOMLStringMap {
     pub tags: HashMap<String, TOMLStringTag>,

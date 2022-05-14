@@ -2,9 +2,10 @@
 
 Simple TOML parser written in Rust.
 
-> Version 0.06
+> Version 0.07
 
 ## Changelog
 
-- New C API
-- C type-checking is mandatory now
+- Better C functions
+- Parsing arrays
+- Multidimensional arrays for C
