@@ -2,9 +2,8 @@
 
 Simple TOML parser written in Rust.
 
-> Version 0.08
+> Version 0.09
 
 ## Changelog
 
-- Changed C array return types
-  - C arrays are never null now and the first element is array size
+- C cleanup functions for arrays and strings

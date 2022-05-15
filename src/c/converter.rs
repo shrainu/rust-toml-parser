@@ -12,13 +12,7 @@ const C_TYPE_BOOL: &str = "bool";
 const C_TYPE_ARRAY_INT: &str = "array_int";
 const C_TYPE_ARRAY_ARRAY_INT: &str = "array_array_int";
 
-/*
-#[no_mangle]
-pub unsafe extern "C" fn toml_parser_free_value(val: ParserValue) {
-    CString::from_raw(val.value_type);
-    CString::from_raw(val.value);
-}
-*/
+
 unsafe fn convert_string_to_int_array(array: String) -> *mut i32 {
 
     let mut values: Vec<i32> = vec![0];
@@ -96,6 +90,25 @@ unsafe fn toml_parser_get_value(
 
     // Return the value
     return val.clone();
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn toml_parser_free_string(str: *mut c_char) {
+    CString::from_raw(str);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn toml_parser_free_int_array(array: *mut i32) {
+    Vec::from_raw_parts(array, *array as usize, *array as usize);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn toml_parser_free_int_array_array(array: *mut *mut i32, size: i32) {
+    let vec: Vec<*mut i32> = Vec::from_raw_parts(array, size as usize, size as usize);
+
+    for arr in vec {
+        toml_parser_free_int_array(arr);
+    }
 }
 
 #[no_mangle]
