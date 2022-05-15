@@ -27,7 +27,7 @@ unsafe fn convert_string_to_int_array(array: String) -> *mut i32 {
         array[pos + 1..array.len()].to_owned()
     } else {
         println!("[WARNING] Array is empty.");
-        return null_mut();
+        return values.into_raw_parts().0;
     };
 
     loop {
@@ -57,7 +57,7 @@ unsafe fn convert_string_to_int_array(array: String) -> *mut i32 {
         }
     }
 
-    // Set values length
+    // Put size
     values[0] = values.len() as i32;
 
     // Return array
@@ -227,7 +227,7 @@ pub unsafe extern "C" fn toml_parser_get_int_array(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn toml_parser_get_array_array_int(
+pub unsafe extern "C" fn toml_parser_get_int_array_array(
     map: *const TOMLStringMap,
     tag: *const c_char,
     name: *const c_char,
